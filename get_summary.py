@@ -13,13 +13,17 @@ def generate_fuel_summary():
     '''
     Function that generates a summary of the fuel details from the input
     '''
+    # get the name of the excel file
+    input_file = argv[1]
+    if not input_file.endswith('.XLSX'):
+        print('Invalid file format. Please provide an excel file')
+        return
+    # use name of input_file to generate output file
+    formatted_name = os.path.splitext(os.path.basename(input_file))[0]
+    output_file = f"{formatted_name}_summary.xlsx"
+
     # read the excel file
     data_file = pd.read_excel(argv[1])
-    # Extract base name and format for output
-    formatted_name = os.path.splitext(os.path.basename(data_file))[0]
-    output_file = f"{formatted_name}_combined_results.xlsx"
-
-
     # sort the data by registration_num and ticket
     data_file.sort_values(by=['Registration_num', 'Ticket'], inplace=True)
 
@@ -45,7 +49,7 @@ def generate_fuel_summary():
         data_selected.to_excel(writer, sheet_name='Summary', index=False)
         grouped_data.to_excel(writer, sheet_name='Totals', index=False)
 
-    print(f"Data saved to {formatted_name}")
+    print(f"Data saved to {output_file}")
 
 if __name__ == "__main__":
     generate_fuel_summary()
